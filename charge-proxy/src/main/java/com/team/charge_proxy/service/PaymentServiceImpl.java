@@ -1,5 +1,6 @@
 package com.team.charge_proxy.service;
 
+import com.team.charge_proxy.client.PaymentMethodsAsaas;
 import com.team.charge_proxy.web.dto.AsaasChargeDeleteResponse;
 import com.team.charge_proxy.web.dto.AsaasChargeRequest;
 import com.team.charge_proxy.web.dto.AsaasChargeResponse;
@@ -15,19 +16,18 @@ import org.springframework.stereotype.Service;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private final PaymentService paymentService;
+    private final PaymentMethodsAsaas paymentMethodsAsaas;
 
-    public PaymentServiceImpl(PaymentService paymentService) {
-        this.paymentService = paymentService;
+    public PaymentServiceImpl(PaymentMethodsAsaas paymentMethodsAsaas) {
+        this.paymentMethodsAsaas = paymentMethodsAsaas;
     }
-
     @Override
     public AsaasChargeResponse createCharge(AsaasChargeRequest request) {
-        return paymentService.createCharge(request);
+        return paymentMethodsAsaas.createCharge(request);
     }
 
     @Override
     public AsaasChargeDeleteResponse deleteCharge(String chargeId) {
-        return paymentService.deleteCharge(chargeId);
+        return paymentMethodsAsaas.deleteCharge(chargeId);
     }
 }
