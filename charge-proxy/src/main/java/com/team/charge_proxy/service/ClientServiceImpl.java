@@ -5,6 +5,7 @@ import com.team.charge_proxy.web.dto.AsaasCustomerRequest;
 import com.team.charge_proxy.web.dto.AsaasCustomerResponse;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @WebService(
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClientServiceImpl implements  ClientService {
     private final ClientMethodsAsaas clientMethodsAsaas;
+    @Value("${asaas.api.key}")
+    private String apiKey;
 
     public ClientServiceImpl(ClientMethodsAsaas clientMethodsAsaas) {
         this.clientMethodsAsaas = clientMethodsAsaas;
@@ -23,11 +26,11 @@ public class ClientServiceImpl implements  ClientService {
 
     @Override
     public AsaasCustomerResponse createClient(AsaasCustomerRequest request) {
-        return clientMethodsAsaas.createCustomer(request);
+        return clientMethodsAsaas.createCustomer(apiKey, request);
     }
 
     @Override
     public AsaasCustomerResponse getClientById(String clientId) {
-        return clientMethodsAsaas.getCustomer(clientId);
+        return clientMethodsAsaas.getCustomer(apiKey, clientId);
     }
 }

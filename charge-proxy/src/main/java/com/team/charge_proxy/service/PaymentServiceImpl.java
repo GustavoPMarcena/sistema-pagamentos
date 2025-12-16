@@ -6,6 +6,7 @@ import com.team.charge_proxy.web.dto.AsaasChargeRequest;
 import com.team.charge_proxy.web.dto.AsaasChargeResponse;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @WebService(
@@ -17,17 +18,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentMethodsAsaas paymentMethodsAsaas;
+    @Value("${asaas.api.key}")
+    private String apiKey;
 
     public PaymentServiceImpl(PaymentMethodsAsaas paymentMethodsAsaas) {
         this.paymentMethodsAsaas = paymentMethodsAsaas;
     }
     @Override
     public AsaasChargeResponse createCharge(AsaasChargeRequest request) {
-        return paymentMethodsAsaas.createCharge(request);
+        return paymentMethodsAsaas.createCharge(apiKey, request);
     }
 
     @Override
     public AsaasChargeDeleteResponse deleteCharge(String chargeId) {
-        return paymentMethodsAsaas.deleteCharge(chargeId);
+        return paymentMethodsAsaas.deleteCharge(apiKey, chargeId);
     }
 }

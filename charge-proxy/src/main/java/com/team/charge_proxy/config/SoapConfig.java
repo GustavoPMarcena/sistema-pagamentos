@@ -10,7 +10,7 @@ public class SoapConfig {
     @Bean
     public Endpoint clientServiceEndpoint(ClientServiceImpl clientService) {
         return Endpoint.publish(
-                "http://localhost:8080/soap/ClientService",
+                "http://localhost:9090/soap/ClientService",
                 clientService
         );
     }
@@ -18,7 +18,7 @@ public class SoapConfig {
     @Bean
     public Endpoint paymentServiceEndpoint(PaymentServiceImpl paymentService) {
         return Endpoint.publish(
-                "http://localhost:8080/soap/PaymentService",
+                    "http://localhost:9090/soap/PaymentService",
                 paymentService
         );
     }
