@@ -10,6 +10,11 @@ services:
       SPRING_DATASOURCE_USERNAME: payments
       SPRING_DATASOURCE_PASSWORD: payments
       PROXY_URL: http://payments-proxy:8081
+<<<<<<< HEAD
+=======
+      PROXY_SOAP_ENABLED: "true"
+      PROXY_SOAP_BASE_URL: http://payments-proxy:9090/soap
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
       WEBHOOK_TOKEN: ${WEBHOOK_TOKEN}
       # Optional SMTP (if empty, manager logs "EMAIL-MOCK" to console)
       MAIL_HOST: ${MAIL_HOST}
@@ -29,6 +34,10 @@ services:
     image: payments/proxy:1.0
     ports:
       - "8081:8081"
+<<<<<<< HEAD
+=======
+      - "9090:9090"
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
     environment:
       MANAGER_URL: http://payments-manager:8080
       ASAAS_API_KEY: ${ASAAS_API_KEY}

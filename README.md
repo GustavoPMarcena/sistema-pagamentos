@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
 # Sistema de Pagamentos (Manager + Proxy)
 
 Este repositório tem **dois microserviços**:
@@ -13,17 +16,24 @@ Este repositório tem **dois microserviços**:
 - Docker Desktop / Docker Engine
 - (Opcional) Java 17 + Maven, se você quiser rodar sem Docker
 
+<<<<<<< HEAD
 ## 2) Subir com Docker Swarm (stack.yml) — **sem docker-compose**
 
 > ✅ Requisito da disciplina: **não adotar docker-compose**.
 
 1. Abra o terminal na pasta raiz `sistema-pagamentos`.
+=======
+## 2) Subir com Docker Compose (recomendado)
+
+1. Abra o terminal na pasta raiz `sistema-pagamentos-development`.
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
 2. Crie um `.env` baseado no exemplo:
 
 ```bash
 cp .env.example .env
 ```
 
+<<<<<<< HEAD
 3. Inicialize o Swarm (uma vez por máquina):
 
 ```bash
@@ -41,6 +51,12 @@ docker build -t payments/proxy:1.0 ./charge-proxy
 
 ```bash
 docker stack deploy -c stack.yml payments
+=======
+3. Suba tudo:
+
+```bash
+docker compose up --build
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
 ```
 
 Serviços:
@@ -101,10 +117,27 @@ Depois disso, o Manager recebe a notificação internamente e marca a cobrança 
 curl http://localhost:8080/api/charges/1
 ```
 
+<<<<<<< HEAD
 ## 4) Derrubar a stack
 
 ```bash
 docker stack rm payments
+=======
+## 4) Rodar com Docker Swarm (stack.yml)
+
+> Só use se você já estiver usando Swarm.
+
+```bash
+docker swarm init
+cp .env.example .env
+# edite o .env se quiser
+
+# build das imagens (Swarm não faz build automaticamente)
+docker build -t payments/manager:1.0 ./charge-manager
+docker build -t payments/proxy:1.0 ./charge-proxy
+
+docker stack deploy -c stack.yml payments
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
 ```
 
 ## 5) Por que o seu projeto “não consolidava” como o outro?
@@ -121,6 +154,7 @@ Principais pontos corrigidos aqui:
 ---
 
 Se quiser, eu também posso te passar uma coleção do Postman (JSON) com as 3 requisições prontas.
+<<<<<<< HEAD
 =======
 # Sistema de Pagamentos (DAC)
 
@@ -194,3 +228,5 @@ docker service ls
 
 
 >>>>>>> 6d5fc466378213b2a0ef2098878416f793dc96a4
+=======
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
