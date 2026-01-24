@@ -47,8 +47,14 @@ java -version
 mvn -version
 git --version
 
-Rodar no charge-manager/charge-proxy:
+Rodar no charge-manager e charge-proxy:
 mvn clean package -DskipTests
+
+
+subir as imagens docker:
+docker build -t charge-manager:latest ./charge-manager
+docker build -t charge-proxy:latest ./charge-proxy
+
 
 Inicializar o Docker Swarm:
 docker swarm init
@@ -58,6 +64,7 @@ docker stack deploy -c stack.yml pagamentos
 
 Verificar se os serviços estão rodando:
 docker service ls
+
 
 
 
