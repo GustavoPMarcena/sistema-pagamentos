@@ -7,15 +7,14 @@ import com.team.charge_proxy.web.dto.AsaasChargeResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "payment-asaas", url = "https://api-sandbox.asaas.com/v3/payments",
-        configuration = AsaasFeignConfig.class)
+@FeignClient(name = "asaas-payments", url = "https://api-sandbox.asaas.com/v3/payments", configuration = AsaasFeignConfig.class)
 public interface PaymentMethodsAsaas {
 
     @PostMapping
-    AsaasChargeResponse createCharge(@RequestHeader("access_token") String accessToken, @RequestBody AsaasChargeRequest request);
+    AsaasChargeResponse createCharge(@RequestHeader("Authorization") String authorization,
+                                    @RequestBody AsaasChargeRequest request);
 
     @DeleteMapping("/{id}")
-    AsaasChargeDeleteResponse deleteCharge(@RequestHeader("access_token") String accessToken, @RequestParam String id);
-
-
+    AsaasChargeDeleteResponse deleteCharge(@RequestHeader("Authorization") String authorization,
+                                          @PathVariable("id") String id);
 }

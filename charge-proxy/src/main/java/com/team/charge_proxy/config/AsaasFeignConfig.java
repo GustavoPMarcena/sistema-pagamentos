@@ -8,13 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class AsaasFeignConfig {
 
     @Bean
-    public RequestInterceptor asaasAuthInterceptor() {
-        return requestTemplate -> {
-            requestTemplate.header(
-                    "Authorization",
-                    "Bearer ${API_KEY}"
-            );
-            requestTemplate.header("Content-Type", "application/json");
-        };
+    public RequestInterceptor contentTypeJson() {
+        return requestTemplate -> requestTemplate.header("Content-Type", "application/json");
     }
 }
