@@ -14,15 +14,31 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+    depends_on:
+      - db
+    networks: 
+      - app-network 
 
   charge-proxy:
     image: charges/proxy:1.0
     ports:
-      - "9090:9090"
+      - "9000:9000"
+    environment:
+      CHARGE_MANAGER_URL: http://charge-manager:8080
+      API_KEY: ${API_KEY}
+      ASAAS_WEBHOOK_TOKEN: ${ASAAS_WEBHOOK_TOKEN}
+    depends_on:
+      - charge-manager
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    networks: 
+      - app-network 
+
 
   db:
     image: postgres:15
@@ -34,6 +50,14 @@ services:
       - dbdata:/var/lib/postgresql/data
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: 
+      - app-network 
 
 volumes:
   dbdata:
+
+networks:
+  app-network:
+    driver: overlay
