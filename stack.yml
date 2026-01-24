@@ -1,39 +1,68 @@
 version: "3.9"
 
 services:
-
-  charge-manager:
-    image: charges/manager:1.0
+  payments-manager:
+    image: payments/manager:1.0
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/charges
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/payments_db
+      SPRING_DATASOURCE_USERNAME: payments
+      SPRING_DATASOURCE_PASSWORD: payments
+      PROXY_URL: http://payments-proxy:8081
+      WEBHOOK_TOKEN: ${WEBHOOK_TOKEN}
+      # Optional SMTP (if empty, manager logs "EMAIL-MOCK" to console)
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+    depends_on:
+      - postgres
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
+    networks:
+      - app-network
 
-  charge-proxy:
-    image: charges/proxy:1.0
+  payments-proxy:
+    image: payments/proxy:1.0
     ports:
-      - "9090:9090"
+      - "8081:8081"
+    environment:
+      MANAGER_URL: http://payments-manager:8080
+      ASAAS_API_KEY: ${ASAAS_API_KEY}
+      ASAAS_WEBHOOK_TOKEN: ${ASAAS_WEBHOOK_TOKEN}
+    depends_on:
+      - payments-manager
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    networks:
+      - app-network
 
-  db:
+  postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: charges
+      POSTGRES_USER: payments
+      POSTGRES_PASSWORD: payments
+      POSTGRES_DB: payments_db
     volumes:
       - dbdata:/var/lib/postgresql/data
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app-network
 
 volumes:
   dbdata:
+
+networks:
+  app-network:
+    driver: overlay
