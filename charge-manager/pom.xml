@@ -53,6 +53,15 @@
     </dependency>
 
     <dependency>
+<<<<<<< HEAD
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <version>4.0.2</version>
+    </dependency>
+
+    <dependency>
+=======
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
@@ -63,6 +72,15 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+<<<<<<< HEAD
+=======
+  <dependency>
+  <groupId>com.sun.xml.ws</groupId>
+  <artifactId>jaxws-rt</artifactId>
+  <version>4.0.2</version>
+</dependency>
+
+>>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
   </dependencies>
 
 
