@@ -1,0 +1,17 @@
+NGROK (Webhook Asaas) - quick guide
+
+1) Run ngrok on the Proxy port (8081):
+   ngrok http 8081
+
+2) Copy the HTTPS Forwarding URL:
+   https://XXXX.ngrok-free.app
+
+3) Set Asaas Webhook URL to:
+   https://XXXX.ngrok-free.app/webhook/asaas
+
+4) Watch ngrok inspector:
+   http://127.0.0.1:4040
+
+5) Watch logs:
+   docker service logs -f payments_payments-proxy
+   docker service logs -f payments_payments-manager
