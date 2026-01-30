@@ -9,9 +9,10 @@ import lombok.Setter;
 
 @XmlRootElement(name = "AsaasCustomerResponse")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Getter @Setter @NoArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class AsaasCustomerResponse {
-
     private String id;
     private String name;
     private String email;

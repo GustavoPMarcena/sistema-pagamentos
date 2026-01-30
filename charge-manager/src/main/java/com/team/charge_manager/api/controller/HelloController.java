@@ -1,4 +1,4 @@
-package com.team.charge_manager.controller;
+package com.team.charge_manager.api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

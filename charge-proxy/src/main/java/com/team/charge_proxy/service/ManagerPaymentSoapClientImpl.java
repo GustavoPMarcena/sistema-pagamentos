@@ -11,12 +11,26 @@ public class ManagerPaymentSoapClientImpl implements ManagerPaymentSoapClient {
 
     private ManagerPaymentSoapClient soapClient;
 
+    /**
+     * URL do WSDL do Manager dentro do Swarm.
+     *
+     * Importante: dentro do container, "localhost" aponta para o próprio Proxy.
+     * Por isso o default deve apontar para o serviço do Manager na rede do Swarm.
+     */
+    private final String wsdlUrl;
+
+    public ManagerPaymentSoapClientImpl(
+            @org.springframework.beans.factory.annotation.Value(
+                    "${manager.soap.wsdl-url:http://payments-manager:9091/soap/PaymentNotificationService?wsdl}"
+            ) String wsdlUrl
+    ) {
+        this.wsdlUrl = wsdlUrl;
+    }
+
     private ManagerPaymentSoapClient getClient() {
         if (soapClient == null) {
             try {
-                URL wsdlUrl = new URL(
-                        "http://localhost:8081/soap/PaymentNotificationService?wsdl"
-                );
+                URL wsdlUrl = new URL(this.wsdlUrl);
 
                 QName qName = new QName(
                         "http://ifpb.com/sistema_pagamentos/manager",

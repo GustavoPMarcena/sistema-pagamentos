@@ -1,34 +1,55 @@
 version: "3.9"
 
 services:
-
-  charge-manager:
-    image: charges/manager:1.0
+  payments-manager:
+    image: payments/manager:1.5
     ports:
       - "8080:8080"
+      - "9091:9091" # SOAP (JAX-WS) do Manager
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/charges
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/payments_db
+      SPRING_DATASOURCE_USERNAME: payments
+      SPRING_DATASOURCE_PASSWORD: payments
+      PROXY_URL: http://payments-proxy:8081
+      PROXY_SOAP_ENABLED: "true"
+      PROXY_SOAP_BASE_URL: http://payments-proxy:9090/soap
+      # SOAP publicado pelo Manager (porta separada do Tomcat)
+      MANAGER_SOAP_BIND_HOST: 0.0.0.0
+      MANAGER_SOAP_PORT: 9091
+      WEBHOOK_TOKEN: e8f9a1c4-asaas-webhook-secret
+      # Optional SMTP (if empty, manager logs "EMAIL-MOCK" to console)
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+    depends_on:
+      - postgres
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-    depends_on:
-      - db
-    networks: 
-      - app-network 
+    networks:
+      - app-network
 
-  charge-proxy:
-    image: charges/proxy:1.0
+  payments-proxy:
+    image: payments/proxy:1.5
     ports:
-      - "9000:9000"
+      - "8081:8081"
+      - "9090:9090"
     environment:
-      CHARGE_MANAGER_URL: http://charge-manager:8080
-      API_KEY: ${API_KEY}
-      ASAAS_WEBHOOK_TOKEN: ${ASAAS_WEBHOOK_TOKEN}
+      SPRING_CONFIG_IMPORT: "optional:configtree:/run/secrets/"
+      MANAGER_URL: http://payments-manager:8080
+      # WSDL do Manager para notificação de pagamento confirmado via SOAP
+      MANAGER_SOAP_WSDL_URL: http://payments-manager:9091/soap/PaymentNotificationService?wsdl
+      #ASAAS_API_KEY:  ${ASAAS_API_KEY}
+      #ASAAS_WEBHOOK_TOKEN:  ${ASAAS_API_KEY}
+    secrets:
+      - source: asaas_api_key
+        target: asaas.api.key
+      - source: asaas_webhook_token
+        target: asaas.webhook.token
     depends_on:
-      - charge-manager
+      - payments-manager
     deploy:
       replicas: 1
       restart_policy:
@@ -36,24 +57,23 @@ services:
       placement:
         constraints:
           - node.role == manager
-    networks: 
-      - app-network 
+    networks:
+      - app-network
 
-
-  db:
+  postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: charges
+      POSTGRES_USER: payments
+      POSTGRES_PASSWORD: payments
+      POSTGRES_DB: payments_db
     volumes:
       - dbdata:/var/lib/postgresql/data
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-    networks: 
-      - app-network 
+    networks:
+      - app-network
 
 volumes:
   dbdata:
@@ -61,3 +81,9 @@ volumes:
 networks:
   app-network:
     driver: overlay
+
+secrets:
+  asaas_api_key:
+    external: true
+  asaas_webhook_token:
+    external: true

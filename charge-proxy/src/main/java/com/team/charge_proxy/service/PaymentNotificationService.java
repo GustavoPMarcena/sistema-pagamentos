@@ -6,20 +6,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class PaymentNotificationService {
 
-    private final ManagerPaymentSoapClient managerPaymentSoapClient;
+    private final ManagerNotifier managerNotifier;
 
-    public PaymentNotificationService(ManagerPaymentSoapClient managerPaymentSoapClient) {
-        this.managerPaymentSoapClient = managerPaymentSoapClient;
+    public PaymentNotificationService(ManagerNotifier managerNotifier) {
+        this.managerNotifier = managerNotifier;
     }
 
     public void notifyManager(AsaasWebhookEvent event) {
-
-        if ("PAYMENT_CONFIRMED".equals(event.getEvent())) {
-            managerPaymentSoapClient.notifyPaymentConfirmed(
-                    event.getPayment().getId(),
-                    event.getPayment().getStatus(),
-                    event.getPayment().getValue()
-            );
+        if (event == null || event.getPayment() == null)
+            return;
+        String eventType = event.getEvent();
+        if ("PAYMENT_CONFIRMED".equalsIgnoreCase(eventType) || "PAYMENT_RECEIVED".equalsIgnoreCase(eventType)) {
+            managerNotifier.notifyPaymentConfirmed(event);
         }
     }
 }
