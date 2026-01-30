@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
+
 # Sistema de Pagamentos (Manager + Proxy)
 
 Este repositório tem **dois microserviços**:
@@ -9,31 +6,29 @@ Este repositório tem **dois microserviços**:
 - **payments-manager** (`charge-manager`) — API principal com banco (PostgreSQL) + regras de negócio
 - **payments-proxy** (`charge-proxy`) — integra com ASAAS (ou modo `MOCK`) e recebe webhook
 
-> 🧩 Objetivo: manter a mesma *lógica de fluxo* do projeto consolidado (Manager→Proxy→Webhook→Manager), mas com **nomes/rotas e estrutura próprias**.
+>  Objetivo: manter a mesma *lógica de fluxo* do projeto consolidado (Manager→Proxy→Webhook→Manager), mas com **nomes/rotas e estrutura próprias**.
 
 ## 1) Pré-requisitos
 
 - Docker Desktop / Docker Engine
 - (Opcional) Java 17 + Maven, se você quiser rodar sem Docker
 
-<<<<<<< HEAD
 ## 2) Subir com Docker Swarm (stack.yml) — **sem docker-compose**
 
-> ✅ Requisito da disciplina: **não adotar docker-compose**.
+>  Requisito da disciplina: **não adotar docker-compose**.
 
 1. Abra o terminal na pasta raiz `sistema-pagamentos`.
 =======
 ## 2) Subir com Docker Compose (recomendado)
 
 1. Abra o terminal na pasta raiz `sistema-pagamentos-development`.
->>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
+
 2. Crie um `.env` baseado no exemplo:
 
 ```bash
 cp .env.example .env
 ```
 
-<<<<<<< HEAD
 3. Inicialize o Swarm (uma vez por máquina):
 
 ```bash
@@ -56,7 +51,6 @@ docker stack deploy -c stack.yml payments
 
 ```bash
 docker compose up --build
->>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
 ```
 
 Serviços:
@@ -117,7 +111,6 @@ Depois disso, o Manager recebe a notificação internamente e marca a cobrança 
 curl http://localhost:8080/api/charges/1
 ```
 
-<<<<<<< HEAD
 ## 4) Derrubar a stack
 
 ```bash
@@ -137,24 +130,7 @@ docker build -t payments/manager:1.0 ./charge-manager
 docker build -t payments/proxy:1.0 ./charge-proxy
 
 docker stack deploy -c stack.yml payments
->>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
 ```
-
-## 5) Por que o seu projeto “não consolidava” como o outro?
-
-Principais pontos corrigidos aqui:
-
-- **Config/portas e nomes coerentes**: Manager 8080, Proxy 8081, URLs dentro da rede Docker
-- **Proxy com endpoints internos** (`/internal/*`) para o Manager consumir (sem gambiarras de SOAP/localhost)
-- **Integração ASAAS correta** via header `Authorization: Bearer <token>`
-- **Modo MOCK** para testar sem depender de ASAAS
-- **Webhook protegido por token** e notificação segura do Proxy → Manager
-- **Banco + migração Flyway** para deixar o Manager realmente persistente
-
----
-
-Se quiser, eu também posso te passar uma coleção do Postman (JSON) com as 3 requisições prontas.
-<<<<<<< HEAD
 =======
 # Sistema de Pagamentos (DAC)
 
@@ -223,10 +199,3 @@ docker stack deploy -c stack.yml pagamentos
 Verificar se os serviços estão rodando:
 docker service ls
 
-
-
-
-
->>>>>>> 6d5fc466378213b2a0ef2098878416f793dc96a4
-=======
->>>>>>> 5de66a5 (Corrigindo implementação do SOAP)
